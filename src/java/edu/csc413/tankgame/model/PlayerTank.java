@@ -18,8 +18,17 @@ public class PlayerTank extends Tank {
         if(KeyboardReader.instance().rightPressed() )
             turnRight(Constants.TANK_TURN_SPEED);
 
+        if( cooldown > 0 ) {
+            cooldown--;
+            return;
+        }
+
         if(KeyboardReader.instance().spacePressed() )
         {
+            if( cooldown > 0 )
+                return;
+            
+            cooldown = 200;
             Shell shell = new Shell("shell" + System.currentTimeMillis(), getShellX(), getShellY(), getShellAngle());
             System.out.println("Shell is created");
             gameWorld.addNewEntity(shell);
