@@ -70,9 +70,4 @@ public abstract class Tank extends Entity {
     private double getShellAngle() {
         return getAngle();
     }
-
-    public void move(GameWorld gameWorld) {
-
-    }
-
 }

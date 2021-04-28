@@ -24,7 +24,7 @@ public class GameWorld {
     }
 
     /** Adds a new entity to the game. */
-    public void addEntity(Tank entity) {
+    public void addEntity(Entity entity) {
         entities.add(entity);
     }
 
@@ -33,8 +33,7 @@ public class GameWorld {
         // TODO: Implement.
         for(Entity entity : entities)
         {
-            Tank tank = (Tank) entity;
-            if(tank.getId().equals(id))
+            if(entity.getId().equals(id))
                 return entity;
         }
         return null;
@@ -45,9 +44,13 @@ public class GameWorld {
         // TODO: Implement.
         for(Entity entity : entities)
         {
-            Tank tank = (Tank) entity;
+            Entity tank = (Entity) entity;
             if(tank.getId().equals(id))
                 entities.remove(entity);
         }
+    }
+
+    public void clear() {
+        entities.clear();
     }
 }

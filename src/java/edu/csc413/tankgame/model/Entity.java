@@ -7,4 +7,13 @@ package edu.csc413.tankgame.model;
 public abstract class Entity {
     /** All entities can move, even if the details of their move logic may vary based on the specific type of Entity. */
     public abstract void move(GameWorld gameWorld);
+
+    public abstract String getId();
+
+    public abstract double getX();
+
+    public abstract double getY();
+
+    public abstract double getAngle();
+
 }

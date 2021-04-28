@@ -53,15 +53,17 @@ public class GameDriver {
      */
     private void setUpGame() {
         // TODO: Implement.
-        Tank tank = new Tank(Constants.PLAYER_TANK_ID, Constants.PLAYER_TANK_INITIAL_X, Constants.PLAYER_TANK_INITIAL_Y, Constants.PLAYER_TANK_INITIAL_ANGLE) {
-        };
+        Entity tank = new PlayerTank(Constants.PLAYER_TANK_ID, Constants.PLAYER_TANK_INITIAL_X, Constants.PLAYER_TANK_INITIAL_Y, Constants.PLAYER_TANK_INITIAL_ANGLE){};
 
         gameWorld.addEntity(tank);
 
         List<Entity> entityList = gameWorld.getEntities();
+        String filename = "player-tank.png";
         for(Entity entity : entityList) {
-            Tank tank1 = (Tank) entity;
-            runGameView.addSprite(tank1.getId(), "player-tank.png", tank1.getX(), tank1.getY(), tank1.getAngle());
+            if( entity instanceof PlayerTank )
+                filename = "player-tank.png";
+
+            runGameView.addSprite(entity.getId(), filename, entity.getX(), entity.getY(), entity.getAngle());
         }
     }
 
@@ -74,8 +76,7 @@ public class GameDriver {
         // TODO: Implement.
         List<Entity> entityList = gameWorld.getEntities();
         for(Entity entity : entityList) {
-            Tank tank1 = (Tank) entity;
-            runGameView.setSpriteLocationAndAngle(tank1.getId(), tank1.getX(), tank1.getY(), tank1.getAngle());
+            runGameView.setSpriteLocationAndAngle(entity.getId(), entity.getX(), entity.getY(), entity.getAngle());
         }
         return true;
     }
@@ -87,6 +88,8 @@ public class GameDriver {
     private void resetGame() {
         // TODO: Implement.
         runGameView.reset();
+        gameWorld.clear();
+
     }
 
     public static void main(String[] args) {
