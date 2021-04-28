@@ -51,14 +51,12 @@ public class GameDriver {
 
     private void addWallToView() {
         List<WallInformation> wall_list = WallInformation.readWalls();
-        gameWorld.setWallList(wall_list);
 
         int i = 1;
         for(WallInformation wall : wall_list) {
-            runGameView.addSprite("wall_" + i, wall.getImageFile(), wall.getX(), wall.getY(), 0);
+            gameWorld.addEntity(new Wall("wall_" + i, wall.getX(), wall.getY(), wall.getImageFile()));
             i++;
         }
-
     }
 
     /**
@@ -89,6 +87,10 @@ public class GameDriver {
                 filename = "player-tank.png";
             if( entity instanceof AITank )
                 filename = "ai-tank.png";
+
+            if( entity instanceof Wall ) {
+                filename = ((Wall)entity).getImagefile();
+            }
 
             runGameView.addSprite(entity.getId(), filename, entity.getX(), entity.getY(), entity.getAngle());
         }
