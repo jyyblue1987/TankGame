@@ -44,13 +44,23 @@ public class GameWorld {
         // TODO: Implement.
         for(Entity entity : entities)
         {
-            Entity tank = (Entity) entity;
-            if(tank.getId().equals(id))
+            if(entity.getId().equals(id))
                 entities.remove(entity);
         }
     }
 
     public void clear() {
         entities.clear();
+    }
+
+    public boolean isGameFinished() {
+        return false;
+    }
+
+    public void update() {
+        for(Entity entity : entities)
+        {
+            entity.move(this);
+        }
     }
 }

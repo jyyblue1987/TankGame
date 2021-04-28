@@ -53,15 +53,25 @@ public class GameDriver {
      */
     private void setUpGame() {
         // TODO: Implement.
-        Entity tank = new PlayerTank(Constants.PLAYER_TANK_ID, Constants.PLAYER_TANK_INITIAL_X, Constants.PLAYER_TANK_INITIAL_Y, Constants.PLAYER_TANK_INITIAL_ANGLE){};
 
-        gameWorld.addEntity(tank);
+        // Create Player Tank and AI tank
+        Entity playerTank = new PlayerTank(Constants.PLAYER_TANK_ID, Constants.PLAYER_TANK_INITIAL_X, Constants.PLAYER_TANK_INITIAL_Y, Constants.PLAYER_TANK_INITIAL_ANGLE){};
+        Entity aiTank1 = new AITank(Constants.AI_TANK_1_ID, Constants.AI_TANK_1_INITIAL_X, Constants.AI_TANK_1_INITIAL_Y, Constants.AI_TANK_1_INITIAL_ANGLE){};
+        Entity aiTank2 = new AITank(Constants.AI_TANK_2_ID, Constants.AI_TANK_2_INITIAL_X, Constants.AI_TANK_2_INITIAL_Y, Constants.AI_TANK_2_INITIAL_ANGLE){};
 
+        // Add Objects into Game World
+        gameWorld.addEntity(playerTank);
+        gameWorld.addEntity(aiTank1);
+        gameWorld.addEntity(aiTank2);
+
+        // Add Spirits to View
         List<Entity> entityList = gameWorld.getEntities();
         String filename = "player-tank.png";
         for(Entity entity : entityList) {
             if( entity instanceof PlayerTank )
                 filename = "player-tank.png";
+            if( entity instanceof AITank )
+                filename = "ai-tank.png";
 
             runGameView.addSprite(entity.getId(), filename, entity.getX(), entity.getY(), entity.getAngle());
         }
@@ -74,6 +84,12 @@ public class GameDriver {
      */
     private boolean updateGame() {
         // TODO: Implement.
+        // check if game is finished
+        if( gameWorld.isGameFinished() )
+            return false;
+
+        gameWorld.update();
+
         List<Entity> entityList = gameWorld.getEntities();
         for(Entity entity : entityList) {
             runGameView.setSpriteLocationAndAngle(entity.getId(), entity.getX(), entity.getY(), entity.getAngle());
