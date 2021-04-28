@@ -8,6 +8,7 @@ import java.util.List;
 public class PlayerTank extends Tank {
     public PlayerTank(String id, double x, double y, double angle) {
         super(id, x, y, angle);
+        cooldown = 0;
     }
 
     public void move(GameWorld gameWorld) {
@@ -51,7 +52,7 @@ public class PlayerTank extends Tank {
             }
 
             cooldown = 200;
-            Shell shell = new Shell("shell" + System.currentTimeMillis(), getShellX(), getShellY(), getShellAngle(), getId());
+            Shell shell = new Shell("player_shell_" + System.currentTimeMillis(), getShellX(), getShellY(), getShellAngle(), getId());
             System.out.println("Shell is created");
             gameWorld.addNewEntity(shell);
         }

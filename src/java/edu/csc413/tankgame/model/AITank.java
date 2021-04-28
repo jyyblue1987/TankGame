@@ -5,6 +5,7 @@ import edu.csc413.tankgame.Constants;
 public class AITank extends Tank {
     public AITank(String id, double x, double y, double angle) {
         super(id, x, y, angle);
+        cooldown = (int)(Math.random() * 400);
     }
 
     public void move(GameWorld gameWorld) {
@@ -37,5 +38,15 @@ public class AITank extends Tank {
         }
 
         moveForward(Constants.TANK_MOVEMENT_SPEED / 5);
+
+        if( cooldown > 0 ) {
+            cooldown--;
+            return;
+        }
+
+        cooldown = (int)(Math.random() * 400);
+        Shell shell = new Shell("ai_shell_" + getId() + "_" + System.currentTimeMillis(), getShellX(), getShellY(), getShellAngle(), getId());
+        System.out.println("Shell is created");
+        gameWorld.addNewEntity(shell);
     }
 }
