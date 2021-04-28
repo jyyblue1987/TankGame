@@ -88,10 +88,41 @@ public class GameDriver {
         if( gameWorld.isGameFinished() )
             return false;
 
+        if(KeyboardReader.instance().escapePressed() )
+            return false;
+
         gameWorld.update();
+
+        // check if game object is valid
 
         List<Entity> entityList = gameWorld.getEntities();
         for(Entity entity : entityList) {
+            if( entity instanceof Tank )
+            {
+                if( entity.getX() < Constants.TANK_X_LOWER_BOUND )
+                    entity.setX(Constants.TANK_X_LOWER_BOUND);
+
+                if( entity.getX() > Constants.TANK_X_UPPER_BOUND )
+                    entity.setX(Constants.TANK_X_UPPER_BOUND);
+
+                if( entity.getY() < Constants.TANK_Y_LOWER_BOUND )
+                    entity.setY(Constants.TANK_Y_LOWER_BOUND);
+
+                if( entity.getY() > Constants.TANK_Y_UPPER_BOUND )
+                    entity.setY(Constants.TANK_Y_UPPER_BOUND);
+            }
+        }
+
+        for(Entity entity : entityList) {
+            if( entity instanceof Shell )
+            {
+                Shell shell = (Shell)entity;
+                if( shell.getShellState() == ShellState.INIT )
+                {
+                    runGameView.addSprite(entity.getId(), "shell.png", entity.getX(), entity.getY(), entity.getAngle());
+                    shell.setShellState(ShellState.MOVING);
+                }
+            }
             runGameView.setSpriteLocationAndAngle(entity.getId(), entity.getX(), entity.getY(), entity.getAngle());
         }
         return true;

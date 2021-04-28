@@ -35,15 +35,15 @@ public abstract class Tank extends Entity {
     // is created by this tank. It needs a slight offset so it appears from the front of the tank,
     // even if the tank is rotated. The shell should have the same angle as the tank.
 
-    private double getShellX() {
+    protected double getShellX() {
         return getX() + Constants.TANK_WIDTH / 2 + 45.0 * Math.cos(getAngle()) - Constants.SHELL_WIDTH / 2;
     }
 
-    private double getShellY() {
+    protected double getShellY() {
         return getY() + Constants.TANK_HEIGHT / 2 + 45.0 * Math.sin(getAngle()) - Constants.SHELL_HEIGHT / 2;
     }
 
-    private double getShellAngle() {
+    protected double getShellAngle() {
         return getAngle();
     }
 }

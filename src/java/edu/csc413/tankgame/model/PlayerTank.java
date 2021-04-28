@@ -17,5 +17,12 @@ public class PlayerTank extends Tank {
             turnLeft(Constants.TANK_TURN_SPEED);
         if(KeyboardReader.instance().rightPressed() )
             turnRight(Constants.TANK_TURN_SPEED);
+
+        if(KeyboardReader.instance().spacePressed() )
+        {
+            Shell shell = new Shell("shell" + System.currentTimeMillis(), getShellX(), getShellY(), getShellAngle());
+            System.out.println("Shell is created");
+            gameWorld.addNewEntity(shell);
+        }
     }
 }

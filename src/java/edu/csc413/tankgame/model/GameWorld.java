@@ -14,6 +14,8 @@ public class GameWorld {
 
     List<Entity> entities = new ArrayList<Entity>();
 
+    List<Entity> new_entities = new ArrayList<Entity>();
+
     public GameWorld() {
     }
 
@@ -26,6 +28,10 @@ public class GameWorld {
     /** Adds a new entity to the game. */
     public void addEntity(Entity entity) {
         entities.add(entity);
+    }
+
+    public void addNewEntity(Entity entity) {
+        new_entities.add(entity);
     }
 
     /** Returns the Entity with the specified ID. */
@@ -51,6 +57,7 @@ public class GameWorld {
 
     public void clear() {
         entities.clear();
+        new_entities.clear();
     }
 
     public boolean isGameFinished() {
@@ -62,5 +69,10 @@ public class GameWorld {
         {
             entity.move(this);
         }
+
+        for(Entity entity: new_entities) {
+            entities.add(entity);
+        }
+        new_entities.clear();
     }
 }
