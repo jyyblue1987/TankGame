@@ -4,6 +4,7 @@ import edu.csc413.tankgame.model.*;
 import edu.csc413.tankgame.view.*;
 
 import java.awt.event.ActionEvent;
+import java.util.ArrayList;
 import java.util.List;
 
 public class GameDriver {
@@ -82,6 +83,27 @@ public class GameDriver {
      * game. As long as it returns true, the game will continue running. If the game should stop for whatever reason
      * (e.g. the player tank being destroyed, escape being pressed), it should return false.
      */
+
+    private void preventTankIntoOutside() {
+        List<Entity> entityList = gameWorld.getEntities();
+
+        for(Entity entity : entityList) {
+            if (entity instanceof Tank) {
+                if (entity.getX() < Constants.TANK_X_LOWER_BOUND)
+                    entity.setX(Constants.TANK_X_LOWER_BOUND);
+
+                if (entity.getX() > Constants.TANK_X_UPPER_BOUND)
+                    entity.setX(Constants.TANK_X_UPPER_BOUND);
+
+                if (entity.getY() < Constants.TANK_Y_LOWER_BOUND)
+                    entity.setY(Constants.TANK_Y_LOWER_BOUND);
+
+                if (entity.getY() > Constants.TANK_Y_UPPER_BOUND)
+                    entity.setY(Constants.TANK_Y_UPPER_BOUND);
+            }
+        }
+
+    }
     private boolean updateGame() {
         // TODO: Implement.
         // check if game is finished
@@ -93,25 +115,31 @@ public class GameDriver {
 
         gameWorld.update();
 
-        // check if game object is valid
+        // check if tank is outside of region
+        preventTankIntoOutside();
 
         List<Entity> entityList = gameWorld.getEntities();
+        List<Entity> removeList = new ArrayList<>();
+
         for(Entity entity : entityList) {
-            if( entity instanceof Tank )
+
+            if( entity instanceof Shell )
             {
-                if( entity.getX() < Constants.TANK_X_LOWER_BOUND )
-                    entity.setX(Constants.TANK_X_LOWER_BOUND);
-
-                if( entity.getX() > Constants.TANK_X_UPPER_BOUND )
-                    entity.setX(Constants.TANK_X_UPPER_BOUND);
-
-                if( entity.getY() < Constants.TANK_Y_LOWER_BOUND )
-                    entity.setY(Constants.TANK_Y_LOWER_BOUND);
-
-                if( entity.getY() > Constants.TANK_Y_UPPER_BOUND )
-                    entity.setY(Constants.TANK_Y_UPPER_BOUND);
+                // check outside of shell
+                if( entity.getX() < Constants.SHELL_X_LOWER_BOUND || entity.getX() > Constants.SHELL_X_UPPER_BOUND ||
+                        entity.getY() < Constants.SHELL_Y_LOWER_BOUND || entity.getY() > Constants.SHELL_Y_UPPER_BOUND)
+                    removeList.add(entity);
             }
         }
+
+        // remove sprits from view
+        for(Entity entity: removeList) {
+            runGameView.removeSprite(entity.getId());
+            System.out.println(entity.getId() + " is removed from view");
+        }
+
+        // remove entity from model
+        entityList.removeAll(removeList);
 
         for(Entity entity : entityList) {
             if( entity instanceof Shell )
@@ -125,6 +153,7 @@ public class GameDriver {
             }
             runGameView.setSpriteLocationAndAngle(entity.getId(), entity.getX(), entity.getY(), entity.getAngle());
         }
+
         return true;
     }
 
