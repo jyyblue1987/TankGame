@@ -28,4 +28,12 @@ public class Shell extends Entity {
     public String getTankID() {
         return tank_id;
     }
+
+    public double getXBound() {
+        return x + Constants.SHELL_WIDTH;
+    }
+
+    public double getYBound() {
+        return y + Constants.SHELL_HEIGHT;
+    }
 }

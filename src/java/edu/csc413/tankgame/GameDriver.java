@@ -150,6 +150,26 @@ public class GameDriver {
             }
         }
 
+        // Collision Detection
+        int entity_count = entityList.size();
+        for(int i = 0; i < entity_count - 1; i++)
+        {
+            Entity e1 = entityList.get(i);
+            if( removeList.contains(e1) )
+                continue;
+            for(int j = 0; j < entity_count; j++)
+            {
+                Entity e2 = entityList.get(j);
+                if( removeList.contains(e2) )
+                    continue;
+
+                if( entitiesOverlap(e1, e2) )
+                {
+                    handleCollision(e1, e2);
+                }
+            }
+        }
+
         // remove sprits from view
         for(Entity entity: removeList) {
             runGameView.removeSprite(entity.getId());
@@ -190,5 +210,58 @@ public class GameDriver {
     public static void main(String[] args) {
         GameDriver gameDriver = new GameDriver();
         gameDriver.start();
+    }
+
+    private boolean entitiesOverlap(Entity e1, Entity e2) {
+        if( e1.getX() < e2.getXBound() &&
+            e1.getXBound() > e2.getX() &&
+            e1.getY() < e2.getYBound() &&
+            e1.getYBound() > e2.getY())
+            return true;
+
+        return false;
+    }
+
+    private void handleCollision(Entity entity1, Entity entity2) {
+        if (entity1 instanceof Tank && entity2 instanceof Tank) {
+            double distance[] = new double[4];
+            distance[0] = entity1.getXBound() - entity2.getX();
+            distance[1] = entity2.getXBound() - entity1.getX();
+            distance[2] = entity1.getYBound() - entity2.getY();
+            distance[3] = entity2.getYBound() - entity1.getY();
+
+            double min_distance = 100000;
+            int index = -1;
+            for(int i = 0; i < 4; i++)
+            {
+                if( distance[i] < min_distance )
+                {
+                    min_distance = distance[i];
+                    index = i;
+                }
+            }
+
+            switch (index) {
+                case 0:
+                    entity1.setX(entity1.getX() - min_distance / 2);
+                    entity2.setX(entity2.getX() + min_distance / 2);
+                    break;
+                case 1:
+                    entity1.setX(entity1.getX() + min_distance / 2);
+                    entity2.setX(entity2.getX() - min_distance / 2);
+                    break;
+                case 2:
+                    entity1.setY(entity1.getY() - min_distance / 2);
+                    entity2.setY(entity2.getY() + min_distance / 2);
+                    break;
+                case 3:
+                    entity1.setY(entity1.getY() + min_distance / 2);
+                    entity2.setY(entity2.getY() - min_distance / 2);
+                    break;
+            }
+
+        } else if (entity1 instanceof Tank && entity2 instanceof Shell) {
+        } else if (entity1 instanceof Shell && entity2 instanceof Tank) {
+        }
     }
 }

@@ -32,9 +32,14 @@ public abstract class Entity {
         return y;
     }
 
+
     public double getAngle() {
         return angle;
     }
+
+    public abstract double getXBound();
+    public abstract double getYBound();
+
 
 
     public void setX(double x) {

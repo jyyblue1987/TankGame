@@ -48,4 +48,12 @@ public abstract class Tank extends Entity {
     protected double getShellAngle() {
         return getAngle();
     }
+
+    public double getXBound() {
+        return x + Constants.TANK_WIDTH;
+    }
+
+    public double getYBound() {
+        return y + Constants.TANK_HEIGHT;
+    }
 }
