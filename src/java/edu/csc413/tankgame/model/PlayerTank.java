@@ -3,6 +3,8 @@ package edu.csc413.tankgame.model;
 import edu.csc413.tankgame.Constants;
 import edu.csc413.tankgame.KeyboardReader;
 
+import java.util.List;
+
 public class PlayerTank extends Tank {
     public PlayerTank(String id, double x, double y, double angle) {
         super(id, x, y, angle);
@@ -27,9 +29,29 @@ public class PlayerTank extends Tank {
         {
             if( cooldown > 0 )
                 return;
-            
+
+            // get shell which fire
+            // check if there is a fired shell
+            boolean exist = false;
+            List<Entity> entityList = gameWorld.getEntities();
+            for(Entity entity : entityList) {
+                if( entity instanceof Shell )
+                {
+                    Shell shell = (Shell) entity;
+                    if( shell.getTankID().equals(getId())) {
+                        exist = true;
+                    }
+                }
+            }
+
+            if( exist )
+            {
+                // cannot fire
+                return;
+            }
+
             cooldown = 200;
-            Shell shell = new Shell("shell" + System.currentTimeMillis(), getShellX(), getShellY(), getShellAngle());
+            Shell shell = new Shell("shell" + System.currentTimeMillis(), getShellX(), getShellY(), getShellAngle(), getId());
             System.out.println("Shell is created");
             gameWorld.addNewEntity(shell);
         }

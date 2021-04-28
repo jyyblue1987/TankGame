@@ -4,8 +4,10 @@ import edu.csc413.tankgame.Constants;
 
 public class Shell extends Entity {
     ShellState shellState = ShellState.INIT;  // 0: init 1: moving 2: destroyed
-    public Shell(String id, double x, double y, double angle) {
+    String tank_id = "";
+    public Shell(String id, double x, double y, double angle, String tank_id) {
         super(id, x, y, angle);
+        this.tank_id = tank_id;
         shellState = ShellState.INIT;
     }
 
@@ -21,5 +23,9 @@ public class Shell extends Entity {
 
     public ShellState getShellState() {
         return shellState;
+    }
+
+    public String getTankID() {
+        return tank_id;
     }
 }

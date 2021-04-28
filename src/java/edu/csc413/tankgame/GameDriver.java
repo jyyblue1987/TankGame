@@ -48,12 +48,27 @@ public class GameDriver {
         new Thread(gameRunner).start();
     }
 
+    private void addWallToView() {
+        List<WallInformation> wall_list = WallInformation.readWalls();
+        gameWorld.setWallList(wall_list);
+
+        int i = 1;
+        for(WallInformation wall : wall_list) {
+            runGameView.addSprite("wall_" + i, wall.getImageFile(), wall.getX(), wall.getY(), 0);
+            i++;
+        }
+
+    }
+
     /**
      * setUpGame is called once at the beginning when the game is started. Entities that are present from the start
      * should be initialized here, with their corresponding sprites added to the RunGameView.
      */
     private void setUpGame() {
         // TODO: Implement.
+
+        // addWallToView
+        addWallToView();
 
         // Create Player Tank and AI tank
         Entity playerTank = new PlayerTank(Constants.PLAYER_TANK_ID, Constants.PLAYER_TANK_INITIAL_X, Constants.PLAYER_TANK_INITIAL_Y, Constants.PLAYER_TANK_INITIAL_ANGLE){};

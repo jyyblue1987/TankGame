@@ -1,6 +1,7 @@
 package edu.csc413.tankgame.model;
 
 import edu.csc413.tankgame.Constants;
+import edu.csc413.tankgame.WallInformation;
 
 import java.util.*;
 
@@ -13,8 +14,8 @@ public class GameWorld {
     //       Add whatever instance variables, constructors, and methods are needed.
 
     List<Entity> entities = new ArrayList<Entity>();
-
     List<Entity> new_entities = new ArrayList<Entity>();
+    List<WallInformation> wall_list = new ArrayList<WallInformation>();
 
     public GameWorld() {
     }
@@ -58,6 +59,7 @@ public class GameWorld {
     public void clear() {
         entities.clear();
         new_entities.clear();
+        wall_list.clear();
     }
 
     public boolean isGameFinished() {
@@ -75,4 +77,11 @@ public class GameWorld {
         }
         new_entities.clear();
     }
+
+    public void setWallList(List<WallInformation> list)
+    {
+        wall_list = list;
+    }
+
+
 }
