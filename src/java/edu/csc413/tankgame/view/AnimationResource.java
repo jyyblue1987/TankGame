@@ -5,7 +5,7 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.URL;
 
-class AnimationResource {
+public class AnimationResource {
     private final BufferedImage[] frames;
 
     AnimationResource(String imagePrefix, String imageSuffix, int numFrames) {

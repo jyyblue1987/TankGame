@@ -12,6 +12,7 @@ public class GameDriver {
     private final RunGameView runGameView;
     private final GameWorld gameWorld;
 
+
     public GameDriver() {
         mainView = new MainView(this::startMenuActionPerformed);
         runGameView = mainView.getRunGameView();
@@ -151,6 +152,7 @@ public class GameDriver {
         for(Entity entity: removeList) {
             runGameView.removeSprite(entity.getId());
             System.out.println(entity.getId() + " is removed from view");
+            runGameView.addAnimation(RunGameView.SHELL_EXPLOSION_ANIMATION, 0, entity.getX(), entity.getY());
         }
 
         // remove entity from model
