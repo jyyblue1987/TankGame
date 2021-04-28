@@ -5,15 +5,34 @@ package edu.csc413.tankgame.model;
  * as tanks, shells, walls, power ups, etc.
  */
 public abstract class Entity {
+    protected String id;
+    protected double x;
+    protected double y;
+    protected double angle;
+
+    public Entity(String id, double x, double y, double angle) {
+        this.id = id;
+        this.x = x;
+        this.y = y;
+        this.angle = angle;
+    }
+
     /** All entities can move, even if the details of their move logic may vary based on the specific type of Entity. */
     public abstract void move(GameWorld gameWorld);
 
-    public abstract String getId();
+    public String getId() {
+        return id;
+    }
 
-    public abstract double getX();
+    public double getX() {
+        return x;
+    }
 
-    public abstract double getY();
+    public double getY() {
+        return y;
+    }
 
-    public abstract double getAngle();
-
+    public double getAngle() {
+        return angle;
+    }
 }
