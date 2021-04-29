@@ -11,7 +11,8 @@ public class MainView {
     public enum Screen {
         START_GAME_SCREEN("start"),
         RUN_GAME_SCREEN("game"),
-        END_MENU_SCREEN("end");
+        END_MENU_SCREEN("end"),
+        PAUSE_MENU_SCREEN("pause");
 
         private final String screenName;
 
@@ -45,8 +46,12 @@ public class MainView {
         StartMenuView startMenuView = new StartMenuView("Start Game", startMenuListener);
         mainPanel.add(startMenuView, Screen.START_GAME_SCREEN.getScreenName());
 
+        PauseMenuView pauseGameView = new PauseMenuView(startMenuListener);
+        mainPanel.add(pauseGameView, Screen.PAUSE_MENU_SCREEN.getScreenName());
+
         StartMenuView endGameView = new StartMenuView("Restart Game", startMenuListener);
         mainPanel.add(endGameView, Screen.END_MENU_SCREEN.getScreenName());
+
 
         runGameView = new RunGameView();
         mainPanel.add(runGameView, Screen.RUN_GAME_SCREEN.getScreenName());
@@ -63,6 +68,7 @@ public class MainView {
 
         Dimension screenSize = switch (screen) {
             case START_GAME_SCREEN, END_MENU_SCREEN -> StartMenuView.SCREEN_DIMENSIONS;
+            case PAUSE_MENU_SCREEN -> StartMenuView.SCREEN_DIMENSIONS;
             case RUN_GAME_SCREEN -> RunGameView.SCREEN_DIMENSIONS;
         };
         mainJFrame.setSize(screenSize);

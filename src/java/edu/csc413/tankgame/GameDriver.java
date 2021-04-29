@@ -13,6 +13,7 @@ public class GameDriver {
     private final RunGameView runGameView;
     private final GameWorld gameWorld;
     private int delayNumber = 0;
+    private boolean gamePaused = false;
 
 
     public GameDriver() {
@@ -28,17 +29,32 @@ public class GameDriver {
     private void startMenuActionPerformed(ActionEvent actionEvent) {
         switch (actionEvent.getActionCommand()) {
             case StartMenuView.START_BUTTON_ACTION_COMMAND -> runGame();
+            case PauseMenuView.RESUME_BUTTON_ACTION_COMMAND -> resumeGame();
+            case PauseMenuView.RESTART_BUTTON_ACTION_COMMAND -> restartGame();
             case StartMenuView.EXIT_BUTTON_ACTION_COMMAND -> mainView.closeGame();
             default -> throw new RuntimeException("Unexpected action command: " + actionEvent.getActionCommand());
         }
     }
+
+    private void resumeGame() {
+        mainView.setScreen(MainView.Screen.RUN_GAME_SCREEN);
+        gamePaused = false;
+    }
+
+    private void restartGame() {
+        resetGame();
+        runGame();
+    }
+
 
     private void runGame() {
         mainView.setScreen(MainView.Screen.RUN_GAME_SCREEN);
         Runnable gameRunner = () -> {
             setUpGame();
             while (updateGame()) {
-                runGameView.repaint();
+                if( gamePaused == false )
+                    runGameView.repaint();
+
                 try {
                     Thread.sleep(10L);
                 } catch (InterruptedException exception) {
@@ -70,6 +86,7 @@ public class GameDriver {
 
         // addWallToView
         delayNumber = 0;
+        gamePaused = false;
         addWallToView();
 
         // Create Player Tank and AI tank
@@ -131,8 +148,16 @@ public class GameDriver {
         if( gameWorld.isGameFinished() )
             return false;
 
-        if(KeyboardReader.instance().escapePressed() )
-            return false;
+        if(KeyboardReader.instance().escapePressed() ) {
+            if( gamePaused == false )
+                mainView.setScreen(MainView.Screen.PAUSE_MENU_SCREEN);
+
+            gamePaused = true;
+            return true;
+        }
+
+        if( gamePaused == true )
+            return true;
 
         gameWorld.update();
 
@@ -178,9 +203,9 @@ public class GameDriver {
             runGameView.removeSprite(entity.getId());
             System.out.println(entity.getId() + " is removed from view");
             if( entity instanceof Shell )
-                runGameView.addAnimation(RunGameView.SHELL_EXPLOSION_ANIMATION, 0, entity.getX(), entity.getY());
+                runGameView.addAnimation(RunGameView.SHELL_EXPLOSION_ANIMATION, RunGameView.SHELL_EXPLOSION_FRAME_DELAY, entity.getX(), entity.getY());
             if( entity instanceof Tank )
-                runGameView.addAnimation(RunGameView.BIG_EXPLOSION_ANIMATION, 3, entity.getX(), entity.getY());
+                runGameView.addAnimation(RunGameView.BIG_EXPLOSION_ANIMATION, RunGameView.BIG_EXPLOSION_FRAME_DELAY, entity.getX(), entity.getY());
         }
 
         // remove entity from model
