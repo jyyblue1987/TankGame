@@ -157,7 +157,7 @@ public class GameDriver {
             Entity e1 = entityList.get(i);
             if( removeList.contains(e1) )
                 continue;
-            for(int j = 0; j < entity_count; j++)
+            for(int j = i + 1; j < entity_count; j++)
             {
                 Entity e2 = entityList.get(j);
                 if( removeList.contains(e2) )
@@ -165,7 +165,7 @@ public class GameDriver {
 
                 if( entitiesOverlap(e1, e2) )
                 {
-                    handleCollision(e1, e2);
+                    handleCollision(e1, e2, removeList);
                 }
             }
         }
@@ -174,7 +174,8 @@ public class GameDriver {
         for(Entity entity: removeList) {
             runGameView.removeSprite(entity.getId());
             System.out.println(entity.getId() + " is removed from view");
-            runGameView.addAnimation(RunGameView.SHELL_EXPLOSION_ANIMATION, 0, entity.getX(), entity.getY());
+            if( entity instanceof Shell )
+                runGameView.addAnimation(RunGameView.SHELL_EXPLOSION_ANIMATION, 0, entity.getX(), entity.getY());
         }
 
         // remove entity from model
@@ -222,7 +223,7 @@ public class GameDriver {
         return false;
     }
 
-    private void handleCollision(Entity entity1, Entity entity2) {
+    private void handleCollision(Entity entity1, Entity entity2, List<Entity> removeList) {
         if (entity1 instanceof Tank && entity2 instanceof Tank) {
             double distance[] = new double[4];
             distance[0] = entity1.getXBound() - entity2.getX();
@@ -232,10 +233,8 @@ public class GameDriver {
 
             double min_distance = 100000;
             int index = -1;
-            for(int i = 0; i < 4; i++)
-            {
-                if( distance[i] < min_distance )
-                {
+            for (int i = 0; i < 4; i++) {
+                if (distance[i] < min_distance) {
                     min_distance = distance[i];
                     index = i;
                 }
@@ -259,7 +258,10 @@ public class GameDriver {
                     entity2.setY(entity2.getY() - min_distance / 2);
                     break;
             }
-
+        } else if (entity1 instanceof Shell && entity2 instanceof Shell) {
+            System.out.println("Shell-Shell: (" + entity1.getId() + ", " + entity2.getId() + ") are collission");
+            removeList.add(entity1);
+            removeList.add(entity2);
         } else if (entity1 instanceof Tank && entity2 instanceof Shell) {
         } else if (entity1 instanceof Shell && entity2 instanceof Tank) {
         }
