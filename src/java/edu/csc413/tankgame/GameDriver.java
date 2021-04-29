@@ -94,10 +94,19 @@ public class GameDriver {
         Entity aiTank1 = new AITank(Constants.AI_TANK_1_ID, Constants.AI_TANK_1_INITIAL_X, Constants.AI_TANK_1_INITIAL_Y, Constants.AI_TANK_1_INITIAL_ANGLE){};
         Entity aiTank2 = new AITank(Constants.AI_TANK_2_ID, Constants.AI_TANK_2_INITIAL_X, Constants.AI_TANK_2_INITIAL_Y, Constants.AI_TANK_2_INITIAL_ANGLE){};
 
+
         // Add Objects into Game World
         gameWorld.addEntity(playerTank);
         gameWorld.addEntity(aiTank1);
         gameWorld.addEntity(aiTank2);
+
+        // Add Power up icon
+        for(int i = 0; i < Constants.POWERUP_COUNT; i++) {
+            double x = Math.random() * (Constants.TANK_X_UPPER_BOUND - Constants.TANK_X_LOWER_BOUND) + Constants.TANK_X_LOWER_BOUND;
+            double y = Math.random() * (Constants.TANK_Y_UPPER_BOUND - Constants.TANK_Y_LOWER_BOUND) + Constants.TANK_Y_LOWER_BOUND;
+            Entity powerup = new PowerUp("powerup_" + i, x, y);
+            gameWorld.addEntity(powerup);
+        }
 
         // Add Spirits to View
         List<Entity> entityList = gameWorld.getEntities();
@@ -107,10 +116,10 @@ public class GameDriver {
                 filename = "player-tank.png";
             if( entity instanceof AITank )
                 filename = "ai-tank.png";
-
-            if( entity instanceof Wall ) {
+            if( entity instanceof Wall )
                 filename = ((Wall)entity).getImagefile();
-            }
+            if( entity instanceof PowerUp )
+                filename = "powerup.png";
 
             runGameView.addSprite(entity.getId(), filename, entity.getX(), entity.getY(), entity.getAngle());
         }
