@@ -286,8 +286,40 @@ public class GameDriver {
                 (shell.getTankID().equals(Constants.AI_TANK_1_ID) || shell.getTankID().equals(Constants.AI_TANK_2_ID)) && tank.getId().equals(Constants.PLAYER_TANK_ID))
         {
             tank.decreaseHealth();
-            if( tank.isAliveTank() == false )
+            if( tank.isAlive() == false )
                 removeList.add(tank);
+        }
+    }
+
+    private void handleCollisionWall2Tank(Entity wall, Entity tank, List<Entity> removeList) {
+        double distance[] = new double[4];
+        distance[0] = wall.getXBound() - tank.getX();
+        distance[1] = tank.getXBound() - wall.getX();
+        distance[2] = wall.getYBound() - tank.getY();
+        distance[3] = tank.getYBound() - wall.getY();
+
+        double min_distance = 100000;
+        int index = -1;
+        for (int i = 0; i < 4; i++) {
+            if (distance[i] < min_distance) {
+                min_distance = distance[i];
+                index = i;
+            }
+        }
+
+        switch (index) {
+            case 0:
+                tank.setX(tank.getX() + min_distance);
+                break;
+            case 1:
+                tank.setX(tank.getX() - min_distance);
+                break;
+            case 2:
+                tank.setY(tank.getY() + min_distance);
+                break;
+            case 3:
+                tank.setY(tank.getY() - min_distance);
+                break;
         }
     }
 
@@ -300,6 +332,10 @@ public class GameDriver {
             handleCollisionShell2Tank((Shell)entity2, (Tank)entity1, removeList);
         } else if (entity1 instanceof Shell && entity2 instanceof Tank) {
             handleCollisionShell2Tank((Shell)entity1, (Tank)entity2, removeList);
+        } else if (entity1 instanceof Tank && entity2 instanceof Wall) {
+            handleCollisionWall2Tank(entity2, entity1, removeList);
+        } else if (entity1 instanceof Wall && entity2 instanceof Tank) {
+            handleCollisionWall2Tank(entity1, entity2, removeList);
         }
     }
 
