@@ -6,6 +6,7 @@ public class AITank extends Tank {
     public AITank(String id, double x, double y, double angle) {
         super(id, x, y, angle);
         cooldown = (int)(Math.random() * 400);
+        health = 2;
     }
 
     public void move(GameWorld gameWorld) {
@@ -44,7 +45,7 @@ public class AITank extends Tank {
             return;
         }
 
-        cooldown = (int)(Math.random() * 400);
+        cooldown = (int)(Math.random() * 200) + 200;
         Shell shell = new Shell("ai_shell_" + getId() + "_" + System.currentTimeMillis(), getShellX(), getShellY(), getShellAngle(), getId());
         System.out.println("Shell is created");
         gameWorld.addNewEntity(shell);

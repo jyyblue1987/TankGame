@@ -7,6 +7,7 @@ public abstract class Tank extends Entity {
     // TODO: Implement. A lot of what's below is relevant to all Entity types, not just Tanks. Move it accordingly to
     //       Entity class.
     protected int cooldown = 0;
+    protected int health = 0;
 
     public Tank(String id, double x, double y, double angle) {
         super(id, x, y, angle);
@@ -55,5 +56,15 @@ public abstract class Tank extends Entity {
 
     public double getYBound() {
         return y + Constants.TANK_HEIGHT;
+    }
+
+    public void decreaseHealth() {
+        health -= 1;
+        if( health <= 0 )
+            health = 0;
+    }
+
+    public boolean isAliveTank() {
+        return health > 0;
     }
 }

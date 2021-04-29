@@ -176,6 +176,8 @@ public class GameDriver {
             System.out.println(entity.getId() + " is removed from view");
             if( entity instanceof Shell )
                 runGameView.addAnimation(RunGameView.SHELL_EXPLOSION_ANIMATION, 0, entity.getX(), entity.getY());
+            if( entity instanceof Tank )
+                runGameView.addAnimation(RunGameView.BIG_EXPLOSION_ANIMATION, 3, entity.getX(), entity.getY());
         }
 
         // remove entity from model
@@ -193,6 +195,12 @@ public class GameDriver {
             }
             runGameView.setSpriteLocationAndAngle(entity.getId(), entity.getX(), entity.getY(), entity.getAngle());
         }
+
+        if( gameWorld.getEntity(Constants.PLAYER_TANK_ID) == null )
+            return false;
+
+        if( gameWorld.getEntity(Constants.AI_TANK_1_ID) == null && gameWorld.getEntity(Constants.AI_TANK_2_ID) == null )
+            return false;
 
         return true;
     }
@@ -223,47 +231,68 @@ public class GameDriver {
         return false;
     }
 
+    private void handleCollisionTank2Tank(Entity entity1, Entity entity2) {
+        double distance[] = new double[4];
+        distance[0] = entity1.getXBound() - entity2.getX();
+        distance[1] = entity2.getXBound() - entity1.getX();
+        distance[2] = entity1.getYBound() - entity2.getY();
+        distance[3] = entity2.getYBound() - entity1.getY();
+
+        double min_distance = 100000;
+        int index = -1;
+        for (int i = 0; i < 4; i++) {
+            if (distance[i] < min_distance) {
+                min_distance = distance[i];
+                index = i;
+            }
+        }
+
+        switch (index) {
+            case 0:
+                entity1.setX(entity1.getX() - min_distance / 2);
+                entity2.setX(entity2.getX() + min_distance / 2);
+                break;
+            case 1:
+                entity1.setX(entity1.getX() + min_distance / 2);
+                entity2.setX(entity2.getX() - min_distance / 2);
+                break;
+            case 2:
+                entity1.setY(entity1.getY() - min_distance / 2);
+                entity2.setY(entity2.getY() + min_distance / 2);
+                break;
+            case 3:
+                entity1.setY(entity1.getY() + min_distance / 2);
+                entity2.setY(entity2.getY() - min_distance / 2);
+                break;
+        }
+    }
+
+    private void handleCollisionShell2Shell(Entity entity1, Entity entity2, List<Entity> removeList) {
+        System.out.println("Shell-Shell: (" + entity1.getId() + ", " + entity2.getId() + ") are collission");
+        removeList.add(entity1);
+        removeList.add(entity2);
+    }
+
+    private void handleCollisionShell2Tank(Shell shell, Tank tank, List<Entity> removeList) {
+        removeList.add(shell);
+        if( shell.getTankID().equals(Constants.PLAYER_TANK_ID) && (tank.getId().equals(Constants.AI_TANK_1_ID) || tank.getId().equals(Constants.AI_TANK_2_ID)) ||
+                (shell.getTankID().equals(Constants.AI_TANK_1_ID) || shell.getTankID().equals(Constants.AI_TANK_2_ID)) && tank.getId().equals(Constants.PLAYER_TANK_ID))
+        {
+            tank.decreaseHealth();
+            if( tank.isAliveTank() == false )
+                removeList.add(tank);
+        }
+    }
+
     private void handleCollision(Entity entity1, Entity entity2, List<Entity> removeList) {
         if (entity1 instanceof Tank && entity2 instanceof Tank) {
-            double distance[] = new double[4];
-            distance[0] = entity1.getXBound() - entity2.getX();
-            distance[1] = entity2.getXBound() - entity1.getX();
-            distance[2] = entity1.getYBound() - entity2.getY();
-            distance[3] = entity2.getYBound() - entity1.getY();
-
-            double min_distance = 100000;
-            int index = -1;
-            for (int i = 0; i < 4; i++) {
-                if (distance[i] < min_distance) {
-                    min_distance = distance[i];
-                    index = i;
-                }
-            }
-
-            switch (index) {
-                case 0:
-                    entity1.setX(entity1.getX() - min_distance / 2);
-                    entity2.setX(entity2.getX() + min_distance / 2);
-                    break;
-                case 1:
-                    entity1.setX(entity1.getX() + min_distance / 2);
-                    entity2.setX(entity2.getX() - min_distance / 2);
-                    break;
-                case 2:
-                    entity1.setY(entity1.getY() - min_distance / 2);
-                    entity2.setY(entity2.getY() + min_distance / 2);
-                    break;
-                case 3:
-                    entity1.setY(entity1.getY() + min_distance / 2);
-                    entity2.setY(entity2.getY() - min_distance / 2);
-                    break;
-            }
+            handleCollisionTank2Tank(entity1, entity2);
         } else if (entity1 instanceof Shell && entity2 instanceof Shell) {
-            System.out.println("Shell-Shell: (" + entity1.getId() + ", " + entity2.getId() + ") are collission");
-            removeList.add(entity1);
-            removeList.add(entity2);
+            handleCollisionShell2Shell(entity1, entity2, removeList);
         } else if (entity1 instanceof Tank && entity2 instanceof Shell) {
+            handleCollisionShell2Tank((Shell)entity2, (Tank)entity1, removeList);
         } else if (entity1 instanceof Shell && entity2 instanceof Tank) {
+            handleCollisionShell2Tank((Shell)entity1, (Tank)entity2, removeList);
         }
     }
 }

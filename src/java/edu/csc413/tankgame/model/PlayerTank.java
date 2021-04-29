@@ -9,6 +9,7 @@ public class PlayerTank extends Tank {
     public PlayerTank(String id, double x, double y, double angle) {
         super(id, x, y, angle);
         cooldown = 0;
+        health = 6;
     }
 
     public void move(GameWorld gameWorld) {
