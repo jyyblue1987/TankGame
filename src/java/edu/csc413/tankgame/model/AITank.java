@@ -11,6 +11,8 @@ public class AITank extends Tank {
 
     public void move(GameWorld gameWorld) {
         Entity playerTank = gameWorld.getEntity(Constants.PLAYER_TANK_ID);
+        if( playerTank == null )
+            return;
 
         // To figure out what angle the AI tank needs to face, we'll use the
         // change in the x and y axes between the AI and player tanks.

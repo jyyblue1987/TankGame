@@ -323,6 +323,15 @@ public class GameDriver {
         }
     }
 
+    private void handleCollisionShell2Wall(Shell shell, Wall wall, List<Entity> removeList) {
+        removeList.add(shell);
+
+        wall.decreaseHealth();
+        if( wall.isAlive() == false )
+            removeList.add(wall);
+
+    }
+
     private void handleCollision(Entity entity1, Entity entity2, List<Entity> removeList) {
         if (entity1 instanceof Tank && entity2 instanceof Tank) {
             handleCollisionTank2Tank(entity1, entity2);
@@ -336,6 +345,10 @@ public class GameDriver {
             handleCollisionWall2Tank(entity2, entity1, removeList);
         } else if (entity1 instanceof Wall && entity2 instanceof Tank) {
             handleCollisionWall2Tank(entity1, entity2, removeList);
+        } else if (entity1 instanceof Wall && entity2 instanceof Shell) {
+            handleCollisionShell2Wall((Shell)entity2, (Wall)entity1, removeList);
+        } else if (entity1 instanceof Shell && entity2 instanceof Wall) {
+            handleCollisionShell2Wall((Shell)entity1, (Wall)entity2, removeList);
         }
     }
 

@@ -64,7 +64,7 @@ public abstract class Tank extends Entity {
             health = 0;
     }
 
-    public boolean isAliveTank() {
+    public boolean isAlive() {
         return health > 0;
     }
 }
