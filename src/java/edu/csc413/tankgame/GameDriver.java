@@ -11,6 +11,7 @@ public class GameDriver {
     private final MainView mainView;
     private final RunGameView runGameView;
     private final GameWorld gameWorld;
+    private int delayNumber = 0;
 
 
     public GameDriver() {
@@ -67,6 +68,7 @@ public class GameDriver {
         // TODO: Implement.
 
         // addWallToView
+        delayNumber = 0;
         addWallToView();
 
         // Create Player Tank and AI tank
@@ -197,10 +199,15 @@ public class GameDriver {
         }
 
         if( gameWorld.getEntity(Constants.PLAYER_TANK_ID) == null )
-            return false;
+        {
+            return shouldWaited();
+        }
 
         if( gameWorld.getEntity(Constants.AI_TANK_1_ID) == null && gameWorld.getEntity(Constants.AI_TANK_2_ID) == null )
-            return false;
+        {
+            return shouldWaited();
+        }
+
 
         return true;
     }
@@ -294,5 +301,17 @@ public class GameDriver {
         } else if (entity1 instanceof Shell && entity2 instanceof Tank) {
             handleCollisionShell2Tank((Shell)entity1, (Tank)entity2, removeList);
         }
+    }
+
+    private boolean shouldWaited() {
+        if( delayNumber <= 0 )
+            delayNumber = 100;
+        else
+            delayNumber--;
+
+        if( delayNumber == 1 )
+            return false;
+
+        return true;
     }
 }
